@@ -1,0 +1,2 @@
+# DecorWindowLib
+以View的形式实现的类似PopupWindow与dialog的效果。
