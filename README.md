@@ -1,7 +1,11 @@
 # DecorWindowLib
 以View的形式实现的类似PopupWindow与dialog的效果。
 
-##usage
+## Image
+
+<img src="https://github.com/Ulez/DecorWindowLib/blob/master/screenshots/view.gif" width = "300" height = "507.6" align=center />
+
+## Usage
 
 ```java
 decorWindowFocus = DecorWindow.Builder

@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showFocus() {
         if (decorWindowFocus == null) {
-            View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_view, null);
+            View dialogView = LayoutInflater.from(this).inflate(R.layout.list_layout, null);
             ArrayList<String> strings = new ArrayList<>();
             for (int i = 0; i < 10; i++) {
                 strings.add("Item----" + i);
@@ -64,15 +64,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             decorWindowFocus = DecorWindow.Builder
                     .newBuilder(this)
                     .setView(dialogView, color)
-//                    .setPosPer(0.01, 0.01, 0.99, 0.99)
-                    .setPosDp(50, 50, 358, 638)
+                    .setPosDp(60, 60, 300, 300)
                     .bindClick(R.id.bt2, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            decorWindowFocus.dismiss(v);
-                        }
-                    })
-                    .bindClick(R.id.tv, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             decorWindowFocus.dismiss(v);
@@ -99,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showUnFocus() {
         if (decorWindowUnfocus == null) {
-            View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_view, null);
+            View dialogView = LayoutInflater.from(this).inflate(R.layout.list_layout, null);
             ArrayList<String> strings = new ArrayList<>();
             for (int i = 0; i < 10; i++) {
                 strings.add("Item----" + i);
@@ -116,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             decorWindowUnfocus = DecorWindow.Builder
                     .newBuilder(this)
                     .setView(dialogView)
-                    .setPosPer(0.01, 0.01, 0.99, 0.99)
+                    .setPosPer(0.1, 0.1, 0.9, 0.9)
                     .bindClick(R.id.bt2, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
