@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">DecorWindowLib</string>
+    <string name="msg">decorWindowFocus = DecorWindow.Builder\n
+                    .newBuilder(this)\n
+                    .setView(dialogView, color)\n
+//                    .setPosPer(0.01, 0.01, 0.99, 0.99) //set position by percent;\n
+                    .setPosDp(50, 50, 358, 638)    //set position by dp;\n
+                    .bindClick(R.id.button, new View.OnClickListener() {\n
+                        @Override\n
+                        public void onClick(View v) {\n
+                            .......\n
+                        }\n
+                    })\n
+                    .animate(new DecorWindow.Animatesss() {\n
+                        @Override\n
+                        public Animator getShowAnimator(View view) {\n
+                            return ObjectAnimator.ofFloat(view, "translationX", view.getWidth(), 0).setDuration(600);\n
+                        }\n
+                        @Override\n
+                        public Animator getHideAnimator(View view) {\n
+                            return ObjectAnimator.ofFloat(view, "translationX", 0, view.getWidth()).setDuration(600);\n
+                        }\n
+                    })\n
+                    .build()\n
+                    .showOrHide();</string>
 </resources>

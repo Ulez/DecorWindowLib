@@ -19,7 +19,7 @@ import java.lang.reflect.Field;
  * Email：1104128773@qq.com
  */
 
-public class DecorWindow{
+public class DecorWindow {
     private static final String TAG = "DecorWindow";
     private View view;
     private FrameLayout frameLayout;
@@ -61,7 +61,6 @@ public class DecorWindow{
             return this;
         if (added) return this;
         frameLayout.addView(view, lp);
-        view.setClickable(true);
         added = true;
         if (showAni) {
             view.setVisibility(View.INVISIBLE);
@@ -77,21 +76,29 @@ public class DecorWindow{
     }
 
     private Animator getShowAnimator(View view, int centerX, int centerY, float startRadius, float endRadius) {
-        return animatesss != null ? animatesss.getShowAnimator(view) : ViewAnimationUtils.createCircularReveal(view, centerX, centerY, startRadius, endRadius).setDuration(DEFAULT_DURATION);
+        Animator animator = null;
+        if (animatesss != null) {
+            animator = animatesss.getShowAnimator(view);
+        }
+        if (animator == null)//default unfocus show animator ;
+            animator = ViewAnimationUtils.createCircularReveal(view, centerX, centerY, startRadius, endRadius).setDuration(DEFAULT_DURATION);
+        return animator;
     }
 
     private Animator getShowAnimatorFocus(View realView) {
-        return animatesss != null ? animatesss.getShowAnimator(realView) : ViewAnimationUtils.createCircularReveal(view, realView.getWidth() / 2 + leftMargin, realView.getHeight() / 2 + topMargin, 0, 1.8f * getMaxRadius(view.getWidth(), view.getHeight())).setDuration(DEFAULT_DURATION);
+        Animator animator = null;
+        if (animatesss != null) {
+            animator = animatesss.getShowAnimator(realView);
+        }
+        if (animator == null)//default focus show animator ;
+            animator = ViewAnimationUtils.createCircularReveal(view, realView.getWidth() / 2 + leftMargin, realView.getHeight() / 2 + topMargin, 0, 1.8f * getMaxRadius(view.getWidth(), view.getHeight())).setDuration(DEFAULT_DURATION);
+        return animator;
     }
 
     public interface Animatesss {
         Animator getShowAnimator(View view);
 
         Animator getHideAnimator(View view);
-
-//        Animator getShowAnimatorFocus(View realView);
-//
-//        Animator getHideAnimatorFocus(View realView);
     }
 
     private int getMaxRadius(int w, int h) {
@@ -105,7 +112,7 @@ public class DecorWindow{
         if (hideAni) {
             int centerX, centerY, maxRaduis;
             if (focus) {
-                View realView = ((ViewGroup) view).getChildAt(0);
+                View realView = view;
                 if (v == null) {
                     centerX = realView.getWidth() / 2;
                     centerY = realView.getHeight() / 2;
@@ -140,11 +147,11 @@ public class DecorWindow{
     private void showAnimate() {
         if (showAnimator != null && showAnimator.isRunning())
             showAnimator.cancel();
-        if (focus) {//default focus show animator ;
-            View realView = ((ViewGroup) view).getChildAt(0);
+        if (focus) {
+            View realView = realView();
             showAnimator = getShowAnimatorFocus(realView);
             showAnimator.start();
-        } else {//default unfocus show animator ;
+        } else {
             showAnimator = getShowAnimator(view, view.getWidth() / 2, view.getHeight() / 2, 0, getMaxRadius(view.getWidth(), view.getHeight()));
             showAnimator.start();
         }
@@ -155,7 +162,7 @@ public class DecorWindow{
         if (hideAnimator != null && hideAnimator.isRunning())
             hideAnimator.cancel();
         if (focus) {//default focus hide animator ;
-            View realView = ((ViewGroup) view).getChildAt(0);
+            View realView = realView();
             hideAnimator = getHideAnimatorFocus(realView, centerX, centerY, maxRaduis);
             hideAnimator.addListener(new AnimatorListenerAdapter() {
                 @Override
@@ -187,14 +194,28 @@ public class DecorWindow{
     }
 
     private Animator getHideAnimator(View view, int centerX, int centerY, int maxRaduis) {
-        return animatesss != null ? animatesss.getHideAnimator(view) : ViewAnimationUtils.createCircularReveal(view, centerX, centerY, maxRaduis, 0).setDuration(DEFAULT_DURATION);
+        Animator animator = null;
+        if (animatesss != null) {
+            animator = animatesss.getHideAnimator(view);
+        }
+        if (animator == null)
+            animator = ViewAnimationUtils.createCircularReveal(view, centerX, centerY, maxRaduis, 0).setDuration(DEFAULT_DURATION);
+        return animator;
     }
 
     private Animator getHideAnimatorFocus(View view, int centerX, int centerY, int maxRaduis) {
-        return animatesss != null ? animatesss.getHideAnimator(view) : ViewAnimationUtils.createCircularReveal(view, centerX, centerY, maxRaduis, 0).setDuration(DEFAULT_DURATION);
+        Animator animator = null;
+        if (animatesss != null) {
+            animator = animatesss.getHideAnimator(view);
+        }
+        if (animator == null)
+            animator = ViewAnimationUtils.createCircularReveal(view, centerX, centerY, maxRaduis, 0).setDuration(DEFAULT_DURATION);
+        return animator;
     }
 
     private void removeView() {
+        view.setTranslationX(0);
+        view.setTranslationY(0);
         frameLayout.removeView(view);
         added = false;
     }
@@ -324,10 +345,26 @@ public class DecorWindow{
             return this;
         }
 
-        public Builder animate(Animatesss animatesss) {
+        public Builder animator(Animatesss animatesss) {
             this.animatesss = animatesss;
             return this;
         }
+
+        public Builder animated(boolean animate) {
+            this.showAni = animate;
+            this.hideAni = animate;
+            return this;
+        }
+    }
+
+
+    private View realView() {
+        return focus ? ((ViewGroup) view).getChildAt(0) : view;
+    }
+
+    public void setLocation(PathPoint p) {
+        realView().setTranslationX(p.x);
+        realView().setTranslationY(p.y);
     }
 
     /**
